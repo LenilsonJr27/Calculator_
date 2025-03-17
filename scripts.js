@@ -1,18 +1,48 @@
-const num0 = document.getElementById("0")
-const num1 = document.getElementById("1")
-const num2 = document.getElementById("2")
-const num3 = document.getElementById("3")
-const num4 = document.getElementById("4")
-const num5 = document.getElementById("5")
-const num6 = document.getElementById("6")
-const num7 = document.getElementById("7")
-const num8 = document.getElementById("8")
-const num9 = document.getElementById("9")
-const delete_ = document.getElementById("apagar")
-const igual = document.getElementById("igual")
-const divisao = document.getElementById("/")
-const maisOuMenos = document.getElementById("+/-")
-const menos = document.getElementById("-")
-const mais = document.getElementById("+")
-const multiplicacao = document.getElementById("*")
-const virgula = document.getElementById(",")
+document.addEventListener("DOMContentLoaded", function () {
+    let display = document.querySelector(".display p");
+    let buttons = document.querySelectorAll(".botao");
+
+    let currentInput = "";
+    let resetDisplay = false;
+
+    buttons.forEach(button => {
+        button.addEventListener("click", function () {
+            let value = this.id;
+            if (value === "c") {
+                currentInput = "";
+                display.textContent = "0";
+            } else if (value === "apagar") {
+                currentInput = currentInput.slice(0, -1);
+                display.textContent = currentInput || "0";
+            } else if (value === "igual") {
+                try {
+                    currentInput = currentInput.replace(/,/g, '.');
+
+                    currentInput = eval(currentInput).toString();
+
+                    display.textContent = currentInput.replace(/\./g, ',');
+                    resetDisplay = true;
+                } catch (error) {
+                    display.textContent = "Erro";
+                    currentInput = "";
+                }
+            } else if (value === "+/-") {
+                if (currentInput !== "") {
+                    if (currentInput.startsWith("-")) {
+                        currentInput = currentInput.substring(1);
+                    } else {
+                        currentInput = "-" + currentInput;
+                    }
+                    display.textContent = currentInput;
+                }
+            } else {
+                if (resetDisplay) {
+                    currentInput = "";
+                    resetDisplay = false;
+                }
+                currentInput += value;
+                display.textContent = currentInput;
+            }
+        });
+    });
+});
